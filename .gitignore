@@ -1,0 +1,9 @@
+/vendor
+/storage
+/.vagrant
+/.idea
+composer.phar
+composer.lock
+.DS_Store
+Thumbs.db
+.DS_Stores
