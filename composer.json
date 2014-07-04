@@ -1,0 +1,20 @@
+{
+    "name": "brunty/laravel-environment",
+    "description": "",
+    "authors": [
+        {
+            "name": "Matt Brunt",
+            "email": "hello@maffyoo.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Brunty\\LaravelEnvironment": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
