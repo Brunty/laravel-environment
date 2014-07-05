@@ -7,10 +7,16 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
         parent::setUp();
 
 
+
     }
 
-    public function testItsOkay() {
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 
-        $this->assertEquals(true, true);
+    public function testFire() {
+        
+        $this->assertTrue(true);
     }
 }
