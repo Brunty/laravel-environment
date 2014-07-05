@@ -1,6 +1,7 @@
 <?php namespace Brunty\LaravelEnvironment\Commands;
 
 use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
+use Brunty\LaravelEnvironment\Helpers\InputHelper;
 use Illuminate\Support\Str as Str;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -41,14 +42,21 @@ class SetupEnvironmentVariablesCommand extends Command {
      */
     protected $envVars = [];
 
+    protected $files;
+    protected $array;
+
     /**
      * Create a new key generator command.
      *
      * @param  \Illuminate\Filesystem\Filesystem $files
      * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper $array
+     * @internal param \Brunty\LaravelEnvironment\Helpers\InputHelper $input
      * @return \Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand
      */
-    public function __construct(Filesystem $files, ArrayHelper $array)
+    public function __construct(
+        Filesystem $files,
+        ArrayHelper $array
+    )
     {
         parent::__construct();
 
@@ -115,27 +123,6 @@ class SetupEnvironmentVariablesCommand extends Command {
         $path = base_path()."/.env{$env}.php";
         return $path;
     }
-    /**
-     * Generate a random key for the application.
-     *
-     * @return string
-     */
-    protected function getRandomKey()
-    {
-        return Str::random(32);
-    }
-
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return array(
-        );
-    }
 
     /**
      * @param array $inputArray
@@ -160,7 +147,7 @@ class SetupEnvironmentVariablesCommand extends Command {
         return $envVarsInput;
     }
 
-    private function createFile($path, $envVars)
+    public function createFile($path, $envVars)
     {
         $varContent = var_export($envVars, true);
         $message = $this->getGenerationMessage();

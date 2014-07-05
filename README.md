@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/Brunty/laravel-environment.png?branch=master)](https://travis-ci.org/Brunty/laravel-environment) [![Coverage Status](https://coveralls.io/repos/Brunty/laravel-environment/badge.png?branch=master)](https://coveralls.io/r/Brunty/laravel-environment?branch=master)
 
+# TO DO:
+- Inject an input helper into the command so that it can be tested without requesting user input - can just mock the input helper to return what we want.
+- Write full tests for the command once the above has been completed
+
 This Laravel 4 package gives you a way to setup and work with your environment files within Laravel from the command line.
 
 - `env:setup`
