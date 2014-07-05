@@ -2,15 +2,15 @@
 
 class SetupEnvironmentVariablesCommandTest extends TestCase {
 
-    /**
-     * Creates the application.
-     *
-     * Needs to be implemented by subclasses.
-     *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-     */
-    public function createApplication()
+    public function setUp()
     {
+        parent::setUp();
 
+
+    }
+
+    public function testItsOkay() {
+
+        $this->assertEquals(true, true);
     }
 }

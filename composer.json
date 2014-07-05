@@ -1,6 +1,6 @@
 {
     "name": "brunty/laravel-environment",
-    "description": "",
+    "description": "Generate and work with .env files from the command line via an artisan command within Laravel.",
     "authors": [
         {
             "name": "Matt Brunt",
@@ -10,6 +10,9 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "2.2.*"
     },
     "autoload": {
         "psr-0": {

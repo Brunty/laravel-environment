@@ -1,5 +1,6 @@
 <?php namespace Brunty\LaravelEnvironment\Commands;
 
+use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
 use Illuminate\Support\Str as Str;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -10,8 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
  * @package Brunty\LaravelEnvironment\Commands
  */
 class SetupEnvironmentVariablesCommand extends Command {
-
-    const KEY_SEPARATOR = '.';
 
     /**
      * The console command name.
@@ -42,21 +41,19 @@ class SetupEnvironmentVariablesCommand extends Command {
      */
     protected $envVars = [];
 
-    protected $arrayKeyParents = [];
-
-    protected $envVarsTempArray = [];
-
     /**
      * Create a new key generator command.
      *
      * @param  \Illuminate\Filesystem\Filesystem $files
+     * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper $array
      * @return \Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand
      */
-    public function __construct(Filesystem $files)
+    public function __construct(Filesystem $files, ArrayHelper $array)
     {
         parent::__construct();
 
         $this->files = $files;
+        $this->array = $array;
     }
 
     /**
@@ -73,13 +70,13 @@ class SetupEnvironmentVariablesCommand extends Command {
         $contents = $this->getKeyFileArray();
 
         // turn the existing contents into an array with their keys as strings (to match the format of user input)
-        $contents = $this->arrayKeyToStringPath($contents);
+        $contents = $this->array->arrayKeyToStringPath($contents);
 
         //merging our arrays, we take the input that the user's entered and merge it with the existing contents
         $this->envVarsInput = $this->mergeDownArrays($this->envVarsInput, $contents);
 
         // Turn the input that the user has entered (along with the existing content) and convert the string keys back to proper array keys
-        $this->envVars = $this->stringPathToArrayKey($this->envVarsInput);
+        $this->envVars = $this->array->stringPathToArrayKey($this->envVarsInput);
 
         // Display a table of the values
         $this->info('Full contents:');
@@ -163,27 +160,6 @@ class SetupEnvironmentVariablesCommand extends Command {
         return $envVarsInput;
     }
 
-    private function stringPathToArrayKey($input = [])
-    {
-        $tempArray = [];
-        foreach($input as $envVar => $value) {
-            $path = explode('.', $envVar);
-            $root = &$tempArray;
-            while(count($path) > 1) {
-                $branch = array_shift($path);
-                if (!isset($root[$branch])) {
-                    $root[$branch] = array();
-                }
-
-                $root = &$root[$branch];
-            }
-
-            $root[$path[0]] = $value;
-        }
-
-        return $tempArray;
-    }
-
     private function createFile($path, $envVars)
     {
         $varContent = var_export($envVars, true);
@@ -204,63 +180,7 @@ CONTENT;
         $this->$type($content); // output separator line to CLI (potentially update to run checks on type)
     }
 
-    /**
-     * Returns our rule key for an input value.
-     *
-     * For example:
-     *
-     * If we passed in $arr['input']['personal']['name'] to arrayKeyToStringPath()
-     *
-     * in $this->arrayKeyParents we'd have:
-     *
-     * [0]        =>        'input',
-     * [1]        =>        'personal'
-     *
-     * and our $key would be $name.
-     *
-     * We can then use this array of parent items to re-construct it as a string path
-     *
-     * @param string $key [optional]     Key of the final item to go on there...
-     * @return  string  the rule key of the rule based on parents
-     */
-    protected function generatePathKey($key = '')
-    {
-        // set the rule key to return
-        $ruleKey = '';
 
-        // if we have parents - implode using the separator
-        if(count($this->arrayKeyParents) > 0)
-        {
-            $ruleKey = implode(self::KEY_SEPARATOR, $this->arrayKeyParents) . self::KEY_SEPARATOR;
-        }
-
-        // append the key of the value onto the end
-        $ruleKey .= $key;
-
-        // return it
-        return $ruleKey;
-    }
-
-    private function arrayKeyToStringPath($contents)
-    {
-        foreach($contents as $key => $value)
-        {
-            if(is_array($value))
-            {
-                $this->arrayKeyParents[] = $key;
-                $append = $this->arrayKeyToStringPath($value);
-            }
-            else
-            {
-                $ruleKey = $this->generatePathKey($key);
-                $this->envVarsTempArray[$ruleKey] = $value;
-            }
-        }
-
-        $this->arrayKeyParents = []; // use this var to hole any parent elements of the current item we're on
-
-        return $this->envVarsTempArray;
-    }
 
     private function getUserInput()
     {
