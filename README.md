@@ -11,7 +11,7 @@ This Laravel 4 package gives you a way to setup and work with your environment f
 Install the package through Composer. Edit your project's `composer.json` file to require `brunty/laravel-environment`.
 
 	"require-dev": {
-		"brunty/laravel.environment": "0.*"
+		"brunty/laravel-environment": "0.*"
 	}
 
 Next, update Composer from the Terminal:
