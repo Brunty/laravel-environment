@@ -6,6 +6,10 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class SetupEnvironmentVariablesCommand
+ * @package Brunty\LaravelEnvironment\Commands
+ */
 class SetupEnvironmentVariablesCommand extends Command {
 
     /**
@@ -22,6 +26,20 @@ class SetupEnvironmentVariablesCommand extends Command {
      */
     protected $description = "Setup the environment file(s) for a Laravel application.";
 
+
+    /*
+     * This array is used to hold the input as entered by the user
+     *
+     * @var array
+     */
+    protected $envVarsInput = [];
+
+    /*
+     * This array holds the actual values stored in array format as they'll be stored in the environment file
+     *
+     * @var array
+     */
+    protected $envVars = [];
     /**
      * Create a new key generator command.
      *
@@ -42,40 +60,52 @@ class SetupEnvironmentVariablesCommand extends Command {
      */
     public function fire()
     {
-        $this->error('This command regenerates the system key for the application, any previously encrypted passwords will no longer be able to be viewed if this is done.');
-        $this->info('The key is set in the environment file (.env.php) - if the various environment variables are not set on the server, this file can be used to set them.');
-        $this->comment('Recommend clearing out the passwords in the DB if you regenerate the key.');
-        $this->comment('Do this with "php artisan securesend:cleareverything"');
 
-        $envVars = [];
+        $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
 
-        $envVar = $this->ask('Enter the name of the environment variable (blank to exit): ');
-
-        while($envVar != '') {
+        while(trim($envVar) != '') {
             $value = $this->ask('Enter the value of the environment variable: ');
+            $this->info('');
 
-            $envVars[$envVar] = $value;
+            $this->envVarsInput[$envVar] = $value;
 
-            $envVar = $this->ask('Enter the name of the environment variable (blank to exit): ');
+            $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
         }
+
+
+        $this->info('');
+
+        $this->envVars = $this->stringPathToArrayKey($this->envVarsInput);
+
+        $contents = $this->getKeyFileArray();
+
+        $this->envVarsInput = $this->mergeDownArrays($this->envVarsInput, $contents);
+
+        $this->envVars += $contents; // merge the two arrays - our old env vars with our new ones over-writing any duplicate keys
+
+        $rows = $this->envToRows($this->envVarsInput); // just use input for nice dot separated syntax
+
+        $headers = ['Key', 'Value'];
+
+        // Display a table of the values
+        $this->info('Full contents:');
+        $this->table($headers, $rows);
+        $this->info('');
 
         if ($this->confirm('Are you sure you want to write these values? [yes|no]', false))
         {
-            // now we can merge
-            $contents = $this->getKeyFileArray();
-            $path = $this->getKeyFilePath();
 
-            $envVars += $contents; // merge the two arrays
+            $path = $this->getKeyFilePath();
 
             $this->files->put($path, '<?php
 
-return ' . var_export($envVars, true) . ';');
+return ' . var_export($this->envVars, true) . ';');
 
             $this->info("Application environment variables set.");
         }
         else
         {
-            $this->info('Ending command, environment file not setup.');
+            $this->error('Ending command, environment file not setup.');
         }
 
     }
@@ -98,6 +128,10 @@ return ' . var_export($envVars, true) . ';');
 
         return $envConfig;
     }
+
+    /**
+     * @return string
+     */
     public function getKeyFilePath() {
 
         $env = $this->option('env') ? '.' . $this->option('env') : '';
@@ -124,6 +158,50 @@ return ' . var_export($envVars, true) . ';');
     {
         return array(
         );
+    }
+
+    /**
+     * @param $envVars
+     * @return array
+     */
+    private function envToRows($inputArray = [])
+    {
+        $rows = [];
+
+        ksort($inputArray);
+        foreach($inputArray as $envVar => $value) {
+            $rows[] = [$envVar, $value];
+        }
+
+        return $rows;
+    }
+
+    private function mergeDownArrays($envVarsInput, $contents)
+    {
+        $envVarsInput += $contents; // merge two arrays
+
+        return $envVarsInput;
+    }
+
+    private function stringPathToArrayKey($input = [])
+    {
+        $tempArray = [];
+        foreach($input as $envVar => $value) {
+            $path = explode('.', $envVar);
+            $root = &$tempArray;
+            while(count($path) > 1) {
+                $branch = array_shift($path);
+                if (!isset($root[$branch])) {
+                    $root[$branch] = array();
+                }
+
+                $root = &$root[$branch];
+            }
+
+            $root[$path[0]] = $value;
+        }
+
+        return $tempArray;
     }
 
 }
