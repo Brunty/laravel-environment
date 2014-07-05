@@ -23,7 +23,7 @@
             </exclude>
         </whitelist>
     </filter>
-    
+
     <testsuites>
         <testsuite name="Package Test Suite">
             <directory suffix=".php">./tests/</directory>
