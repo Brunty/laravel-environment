@@ -7,7 +7,13 @@ php:
   - hhvm
 
 before_script:
-  - composer self-update
-  - composer install --prefer-source --no-interaction --dev
+ - wget http://getcomposer.org/composer.phar
+ - php composer.phar install --dev --no-interaction
 
-script: phpunit
+script:
+ - mkdir -p build/logs
+ - phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+ - php vendor/bin/coveralls -v
+
