@@ -12,7 +12,8 @@
         "illuminate/support": "4.2.*"
     },
     "require-dev": {
-        "orchestra/testbench": "2.2.*"
+        "orchestra/testbench": "2.2.*",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "psr-0": {

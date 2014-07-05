@@ -7,3 +7,8 @@ composer.lock
 .DS_Store
 Thumbs.db
 .DS_Stores
+/build
+.ruby-version
+composer.lock
+Gemfile.lock
+coverage
