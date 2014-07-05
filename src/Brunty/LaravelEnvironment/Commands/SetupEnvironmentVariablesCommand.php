@@ -1,6 +1,5 @@
 <?php namespace Brunty\LaravelEnvironment\Commands;
 
-use Illuminate\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str as Str;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -11,6 +10,8 @@ use Symfony\Component\Console\Input\InputOption;
  * @package Brunty\LaravelEnvironment\Commands
  */
 class SetupEnvironmentVariablesCommand extends Command {
+
+    const KEY_SEPARATOR = '.';
 
     /**
      * The console command name.
@@ -40,6 +41,11 @@ class SetupEnvironmentVariablesCommand extends Command {
      * @var array
      */
     protected $envVars = [];
+
+    protected $arrayKeyParents = [];
+
+    protected $envVarsTempArray = [];
+
     /**
      * Create a new key generator command.
      *
@@ -55,59 +61,33 @@ class SetupEnvironmentVariablesCommand extends Command {
 
     /**
      * Execute the console command.
-     * Initially this just started as a way to re-generate the key in laravel using my own string library, decided to extend it.
      * @return void
      */
     public function fire()
     {
+        $this->envVarsInput = $this->getUserInput();
 
-        $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
+        $this->separatorLine();
 
-        while(trim($envVar) != '') {
-            $value = $this->ask('Enter the value of the environment variable: ');
-            $this->info('');
-
-            $this->envVarsInput[$envVar] = $value;
-
-            $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
-        }
-
-
-        $this->info('');
-
-        $this->envVars = $this->stringPathToArrayKey($this->envVarsInput);
-
+        // get our existing content
         $contents = $this->getKeyFileArray();
 
+        // turn the existing contents into an array with their keys as strings (to match the format of user input)
+        $contents = $this->arrayKeyToStringPath($contents);
+
+        //merging our arrays, we take the input that the user's entered and merge it with the existing contents
         $this->envVarsInput = $this->mergeDownArrays($this->envVarsInput, $contents);
 
-        $this->envVars += $contents; // merge the two arrays - our old env vars with our new ones over-writing any duplicate keys
-
-        $rows = $this->envToRows($this->envVarsInput); // just use input for nice dot separated syntax
-
-        $headers = ['Key', 'Value'];
+        // Turn the input that the user has entered (along with the existing content) and convert the string keys back to proper array keys
+        $this->envVars = $this->stringPathToArrayKey($this->envVarsInput);
 
         // Display a table of the values
         $this->info('Full contents:');
-        $this->table($headers, $rows);
-        $this->info('');
+        $this->envTable(['Key', 'Value'], $this->inputToRows($this->envVarsInput));
+        $this->separatorLine();
 
-        if ($this->confirm('Are you sure you want to write these values? [yes|no]', false))
-        {
-
-            $path = $this->getKeyFilePath();
-
-            $this->files->put($path, '<?php
-
-return ' . var_export($this->envVars, true) . ';');
-
-            $this->info("Application environment variables set.");
-        }
-        else
-        {
-            $this->error('Ending command, environment file not setup.');
-        }
-
+        // confirm and (possibly) write the file!
+        $this->confirmWrite($this->getKeyFilePath(), $this->envVars);
     }
 
     /**
@@ -161,10 +141,10 @@ return ' . var_export($this->envVars, true) . ';');
     }
 
     /**
-     * @param $envVars
+     * @param array $inputArray
      * @return array
      */
-    private function envToRows($inputArray = [])
+    private function inputToRows($inputArray = [])
     {
         $rows = [];
 
@@ -202,6 +182,123 @@ return ' . var_export($this->envVars, true) . ';');
         }
 
         return $tempArray;
+    }
+
+    private function createFile($path, $envVars)
+    {
+        $varContent = var_export($envVars, true);
+        $message = $this->getGenerationMessage();
+        $fileContent = <<<CONTENT
+<?php
+
+// {$message}
+
+return {$varContent};
+
+CONTENT;
+        $this->files->put($path, $fileContent);
+    }
+
+    private function separatorLine($content = '', $type = 'info')
+    {
+        $this->$type($content); // output separator line to CLI (potentially update to run checks on type)
+    }
+
+    /**
+     * Returns our rule key for an input value.
+     *
+     * For example:
+     *
+     * If we passed in $arr['input']['personal']['name'] to arrayKeyToStringPath()
+     *
+     * in $this->arrayKeyParents we'd have:
+     *
+     * [0]        =>        'input',
+     * [1]        =>        'personal'
+     *
+     * and our $key would be $name.
+     *
+     * We can then use this array of parent items to re-construct it as a string path
+     *
+     * @param string $key [optional]     Key of the final item to go on there...
+     * @return  string  the rule key of the rule based on parents
+     */
+    protected function generatePathKey($key = '')
+    {
+        // set the rule key to return
+        $ruleKey = '';
+
+        // if we have parents - implode using the separator
+        if(count($this->arrayKeyParents) > 0)
+        {
+            $ruleKey = implode(self::KEY_SEPARATOR, $this->arrayKeyParents) . self::KEY_SEPARATOR;
+        }
+
+        // append the key of the value onto the end
+        $ruleKey .= $key;
+
+        // return it
+        return $ruleKey;
+    }
+
+    private function arrayKeyToStringPath($contents)
+    {
+        foreach($contents as $key => $value)
+        {
+            if(is_array($value))
+            {
+                $this->arrayKeyParents[] = $key;
+                $append = $this->arrayKeyToStringPath($value);
+            }
+            else
+            {
+                $ruleKey = $this->generatePathKey($key);
+                $this->envVarsTempArray[$ruleKey] = $value;
+            }
+        }
+
+        $this->arrayKeyParents = []; // use this var to hole any parent elements of the current item we're on
+
+        return $this->envVarsTempArray;
+    }
+
+    private function getUserInput()
+    {
+        $userInput = [];
+        $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
+
+        while(trim($envVar) != '') {
+            $value = $this->ask('Enter the value of the environment variable: ');
+
+            $this->separatorLine();
+
+            $userInput[$envVar] = $value;
+
+            $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
+        }
+        return $userInput;
+    }
+
+    private function envTable($headers, $rows)
+    {
+        $this->table($headers, $rows);
+    }
+
+    private function confirmWrite($path, $vars)
+    {
+        if ($this->confirm('Are you sure you want to write these values? [yes|no]', false))
+        {
+            $this->createFile($path, $vars);
+            $this->info("Application environment variables set.");
+        }
+        else
+        {
+            $this->error('Ending command, environment file not setup.');
+        }
+    }
+
+    private function getGenerationMessage() {
+        return 'File set @ ' . date('l jS \of F Y h:i:s A') . ' by brunty/laravel-environment generation command';
     }
 
 }

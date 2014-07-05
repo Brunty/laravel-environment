@@ -43,7 +43,7 @@ You can see the commands within artisan
 ## Usage
 
 
-- `env:setup`
+- `php artisan env:setup`
 
 Use the above command to setup an environment file, it works with the optional `--env` flag to specify what environment the file should be for.
 

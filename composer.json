@@ -14,7 +14,10 @@
     "autoload": {
         "psr-0": {
             "Brunty\\LaravelEnvironment": "src/"
-        }
+        },
+        "classmap": [
+            "tests/TestCase.php"
+        ]
     },
     "minimum-stability": "stable"
 }
