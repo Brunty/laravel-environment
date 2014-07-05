@@ -20,6 +20,8 @@
                 <directory>./tests</directory>
                 <directory>./travis</directory>
                 <directory>./vendor</directory>
+                <file>./src/Brunty/LaravelEnvironment/Files/.env.default.php</file>
+                <file>./src/Brunty/LaravelEnvironment/LaravelEnvironmentServiceProvider.php3</file>
             </exclude>
         </whitelist>
     </filter>

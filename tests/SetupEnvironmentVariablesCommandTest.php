@@ -16,7 +16,7 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
     }
 
     public function testFire() {
-        
+
         $this->assertTrue(true);
     }
 }
