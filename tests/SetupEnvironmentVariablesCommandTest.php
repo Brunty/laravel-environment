@@ -48,10 +48,8 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
     public function setUp()
     {
         parent::setUp();
-
-        $this->application = new Application();
-        $this->application->add(new SetupEnvironmentVariablesCommand(new FileSystemHelper(), new ArrayHelper()));
-        $this->command = $this->application->find('env:setup');
+        
+        $this->command = App::make('Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand');
         $this->commandTester = new CommandTester($this->command);
         $this->inputInterface = $this->commandTester->getInput();
         $this->outputInterface = $this->commandTester->getOutput();
