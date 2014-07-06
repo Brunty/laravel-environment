@@ -137,7 +137,7 @@ class SetupEnvironmentVariablesCommand extends Command {
      */
     public function createFile($path, $envVars)
     {
-        // TODO: refactor this
+        // TODO: refactor this ?
         $varContent = var_export($envVars, true);
         $message = $this->getGenerationMessage();
         $fileContent = <<<CONTENT
