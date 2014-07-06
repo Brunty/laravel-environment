@@ -169,14 +169,13 @@ CONTENT;
         $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
 
         while(trim($envVar) != '') {
-            //$value = $this->ask('Enter the value of the environment variable: ');
-            $value = 'asdasd';
+            $value = $this->ask('Enter the value of the environment variable: ');
+
             $this->separatorLine();
 
             $userInput[$envVar] = $value;
 
-            $envVar = '';
-            //$envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
+            $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
         }
         return $userInput;
     }
