@@ -84,6 +84,64 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
 
         return $stream;
     }
+    public function testUserAsks() {
+        $nameMessage = '';
+        $valueMessage = '';
+
+        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+
+        $command->shouldReceive('ask')
+            ->times(1)
+            ->andReturn('foo');
+
+        $command->askInitialName($nameMessage);
+
+        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+
+        $command->shouldReceive('ask')
+            ->times(1)
+            ->andReturn('bar');
+
+        $command->askValue($valueMessage);
+
+        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+
+        $command->shouldReceive('ask')
+            ->times(1)
+            ->andReturn('');
+
+        $command->askRepeatName($nameMessage);
+
+    }
+    public function testGetUserInput() {
+
+        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[askInitialName, askValue, separatorLine, askRepeatName]", [$this->fileSystem, $this->arrayHelper]);
+
+        $command->shouldReceive('askInitialName')
+            ->once()
+            ->andReturn('foo');
+
+        $command->shouldReceive('askValue')
+            ->once()
+            ->andReturn('bar');
+
+        $command->shouldReceive('askRepeatName')
+            ->once()
+            ->andReturn('');
+
+        $command->shouldReceive('separatorLine')
+            ->once()
+            ->andReturn('');
+
+        $expectedInput = [
+            'foo'  =>  'bar'
+        ];
+
+        $actualInput = $command->getUserInput();
+
+        $this->assertEquals($expectedInput, $actualInput);
+
+    }
 
     public function testCreateFile() {
         $message = 'Created';

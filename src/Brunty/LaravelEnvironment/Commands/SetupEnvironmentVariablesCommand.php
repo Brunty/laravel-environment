@@ -168,18 +168,31 @@ CONTENT;
     {
 
         $userInput = [];
-        $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
+        $envVar = $this->askInitialName('Enter the name of the environment variable (blank to finish setup): ');
 
         while(trim($envVar) != '') {
-            $value = $this->ask('Enter the value of the environment variable: ');
+            $value = $this->askValue('Enter the value of the environment variable: ');
 
             $this->separatorLine();
 
             $userInput[$envVar] = $value;
 
-            $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
+            $envVar = $this->askRepeatName('Enter the name of the environment variable (blank to finish setup): ');
         }
         return $userInput;
+    }
+
+    public function askInitialName($message) {
+        return $this->ask($message);
+    }
+
+    public function askRepeatName($message) {
+        return $this->ask($message);
+    }
+
+
+    public function askValue($message) {
+        return $this->ask($message);
     }
 
     /**
