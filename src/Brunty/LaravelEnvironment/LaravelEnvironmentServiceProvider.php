@@ -2,6 +2,7 @@
 
 use Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand;
 use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
+use Brunty\LaravelEnvironment\Helpers\FileSystemHelper;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,7 +44,7 @@ class LaravelEnvironmentServiceProvider extends ServiceProvider {
         // Register our Commands
         $this->app['setup.env'] = $this->app->share(function($app)
         {
-            return new SetupEnvironmentVariablesCommand(new Filesystem(), new ArrayHelper());
+            return new SetupEnvironmentVariablesCommand(new FileSystemHelper(), new ArrayHelper());
         });
 
         $this->commands('setup.env');

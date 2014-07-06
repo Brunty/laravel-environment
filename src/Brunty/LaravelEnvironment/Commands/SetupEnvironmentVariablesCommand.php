@@ -1,6 +1,7 @@
 <?php namespace Brunty\LaravelEnvironment\Commands;
 
 use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
+use Brunty\LaravelEnvironment\Helpers\FileSystemHelper;
 use Brunty\LaravelEnvironment\Helpers\InputHelper;
 use Illuminate\Support\Str as Str;
 use Illuminate\Console\Command;
@@ -55,11 +56,11 @@ class SetupEnvironmentVariablesCommand extends Command {
     /**
      * Create a new key generator command.
      *
-     * @param  \Illuminate\Filesystem\Filesystem $files
+     * @param \Brunty\LaravelEnvironment\Helpers\FileSystemHelper $files
      * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper $array
      */
     public function __construct(
-        Filesystem $files,
+        FileSystemHelper $files,
         ArrayHelper $array
     )
     {
@@ -105,16 +106,16 @@ class SetupEnvironmentVariablesCommand extends Command {
      *
      * @return array
      */
-    protected function getKeyFileArray()
+    public function getKeyFileArray()
     {
         $path = $this->getKeyFilePath();
         $defaultEnvFile = dirname(__FILE__)."/../Files/.env.default.php";
 
-        if( ! file_exists($path)) {
+        if( ! $this->files->exists($path)) {
             $this->files->copy($defaultEnvFile, $path); // copy default file
         }
 
-        $envConfig = include($path);
+        $envConfig = $this->files->includeFile($path);
 
         return $envConfig;
     }
@@ -147,14 +148,14 @@ class SetupEnvironmentVariablesCommand extends Command {
 return {$varContent};
 
 CONTENT;
-        $this->files->put($path, $fileContent);
+        return $this->files->put($path, $fileContent);
     }
 
     /**
      * @param string $content
      * @param string $type
      */
-    private function separatorLine($content = '', $type = 'info')
+    public function separatorLine($content = '', $type = 'info')
     {
         $this->$type($content); // output separator line to CLI (potentially update to run checks on type)
     }
@@ -163,8 +164,9 @@ CONTENT;
     /**
      * @return array
      */
-    private function getUserInput()
+    public function getUserInput()
     {
+
         $userInput = [];
         $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
 
@@ -184,7 +186,7 @@ CONTENT;
      * @param $headers
      * @param $rows
      */
-    private function envTable($headers, $rows)
+    public function envTable($headers, $rows)
     {
         $this->table($headers, $rows);
     }
@@ -193,7 +195,7 @@ CONTENT;
      * @param $path
      * @param $vars
      */
-    private function confirmWrite($path, $vars)
+    public function confirmWrite($path, $vars)
     {
         if ($this->confirm('Are you sure you want to write these values? [yes|no]', false))
         {
@@ -209,7 +211,7 @@ CONTENT;
     /**
      * @return string
      */
-    private function getGenerationMessage() {
+    public function getGenerationMessage() {
         return 'File set @ ' . date('l jS \of F Y h:i:s A') . ' by brunty/laravel-environment generation command';
     }
 
