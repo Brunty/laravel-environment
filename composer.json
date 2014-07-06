@@ -1,6 +1,7 @@
 {
     "name": "brunty/laravel-environment",
     "description": "Generate and work with .env files from the command line via an artisan command within Laravel.",
+    "license": "MIT",
     "authors": [
         {
             "name": "Matt Brunt",
