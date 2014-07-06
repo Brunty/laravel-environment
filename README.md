@@ -76,4 +76,4 @@ It'll then give you a table showing the values that will be written to the file 
 - If using multi-dimensional arrays, you cannot specify both a value for an item, and have an array in that same item.
 
 
-!(http://i.imgur.com/jIEaD1j.jpg)
+![Example of it working](http://i.imgur.com/jIEaD1j.jpg)
