@@ -42,7 +42,14 @@ class SetupEnvironmentVariablesCommand extends Command {
      */
     protected $envVars = [];
 
+    /**
+     * @var \Illuminate\Filesystem\Filesystem
+     */
     protected $files;
+
+    /**
+     * @var \Brunty\LaravelEnvironment\Helpers\ArrayHelper
+     */
     protected $array;
 
     /**
@@ -50,9 +57,6 @@ class SetupEnvironmentVariablesCommand extends Command {
      *
      * @param  \Illuminate\Filesystem\Filesystem $files
      * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper $array
-     * @param \Brunty\LaravelEnvironment\Helpers\InputHelper $input
-     * @internal param \Brunty\LaravelEnvironment\Helpers\InputHelper $input
-     * @return \Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand
      */
     public function __construct(
         Filesystem $files,
@@ -126,8 +130,13 @@ class SetupEnvironmentVariablesCommand extends Command {
     }
 
 
+    /**
+     * @param $path
+     * @param $envVars
+     */
     public function createFile($path, $envVars)
     {
+        // TODO: refactor this
         $varContent = var_export($envVars, true);
         $message = $this->getGenerationMessage();
         $fileContent = <<<CONTENT
@@ -141,13 +150,19 @@ CONTENT;
         $this->files->put($path, $fileContent);
     }
 
+    /**
+     * @param string $content
+     * @param string $type
+     */
     private function separatorLine($content = '', $type = 'info')
     {
         $this->$type($content); // output separator line to CLI (potentially update to run checks on type)
     }
 
 
-
+    /**
+     * @return array
+     */
     private function getUserInput()
     {
         $userInput = [];
@@ -166,11 +181,19 @@ CONTENT;
         return $userInput;
     }
 
+    /**
+     * @param $headers
+     * @param $rows
+     */
     private function envTable($headers, $rows)
     {
         $this->table($headers, $rows);
     }
 
+    /**
+     * @param $path
+     * @param $vars
+     */
     private function confirmWrite($path, $vars)
     {
         if ($this->confirm('Are you sure you want to write these values? [yes|no]', false))
@@ -184,6 +207,9 @@ CONTENT;
         }
     }
 
+    /**
+     * @return string
+     */
     private function getGenerationMessage() {
         return 'File set @ ' . date('l jS \of F Y h:i:s A') . ' by brunty/laravel-environment generation command';
     }

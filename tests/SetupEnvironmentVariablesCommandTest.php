@@ -7,14 +7,39 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Class SetupEnvironmentVariablesCommandTest
+ */
 class SetupEnvironmentVariablesCommandTest extends TestCase {
 
+    /**
+     * @var
+     */
     protected $command;
+
+    /**
+     * @var
+     */
     protected $application;
+
+    /**
+     * @var
+     */
     protected $commandTester;
+
+    /**
+     * @var
+     */
     protected $inputInterface;
+
+    /**
+     * @var
+     */
     protected $outputInterface;
 
+    /**
+     * Setup our test - used to register commands with the Symfony command tester.
+     */
     public function setUp()
     {
         parent::setUp();
@@ -26,22 +51,21 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
         $this->inputInterface = $this->commandTester->getInput();
         $this->outputInterface = $this->commandTester->getOutput();
 
-        /*
-         * http://laravel.io/forum/05-14-2014-testing-artisan-commands
-         * http://marekkalnik.tumblr.com/post/32601882836/symfony2-testing-interactive-console-command
-         * http://symfony.com/doc/current/components/console/introduction.html
-         *
-         * Going to inject an object into the command that handles input - can then mock that when testing, needs some more thought though.
-         */
-
     }
 
+    /**
+     * Used to close any mocks we have
+     */
     public function tearDown()
     {
         Mockery::close();
     }
 
 
+    /**
+     * @param $input
+     * @return resource
+     */
     protected function getInputStream($input)
     {
         $stream = fopen('php://memory', 'r+', false);
@@ -51,9 +75,11 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
         return $stream;
     }
 
-    /*
-    public function testCommandFires() {
-
+    /**
+     * Use this method to eventually test that the command fires correctly.
+     */
+    public function testFire() {
+        /*
         $helper = $this->command->getHelper('question');
         $inputStream = $this->getInputStream('Test\\n');
 
@@ -63,11 +89,7 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
                 'command' => $this->command->getName(),
                 'env'   =>  'testing'
         ]);
-    }
-    */
-
-
-    public function testFire() {
+        */
 
         $this->assertTrue(true);
     }
