@@ -30,9 +30,9 @@ Previously, you may have entered your environment variables like so:
 
     'key'   =>  $_ENV['ENV_VAR'],
 
-This will cause issues with the package if you don't have an .env file for your environment (this package can create them from blank if required)
+This will cause issues with the package if you don't have an .env file for your environment (this package can create them from blank if required) when using this way of referencing environment variables.
 
-If creation is required, you should reference `$_ENV` in the following way:
+If creation is required, you should reference your environment variables using `getenv('varname')` - alternative you /could/ use:
 
     'key'   =>  isset($_ENV['ENV_VAR']) ?: null,
 

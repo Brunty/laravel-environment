@@ -4,6 +4,7 @@ use Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand;
 use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class SetupEnvironmentVariablesCommandTest extends TestCase {
@@ -11,6 +12,8 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
     protected $command;
     protected $application;
     protected $commandTester;
+    protected $inputInterface;
+    protected $outputInterface;
 
     public function setUp()
     {
@@ -20,7 +23,11 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
         $this->application->add(new SetupEnvironmentVariablesCommand(new Filesystem(), new ArrayHelper()));
         $this->command = $this->application->find('env:setup');
         $this->commandTester = new CommandTester($this->command);
+        $this->inputInterface = $this->commandTester->getInput();
+        $this->outputInterface = $this->commandTester->getOutput();
+
         /*
+         * http://laravel.io/forum/05-14-2014-testing-artisan-commands
          * http://marekkalnik.tumblr.com/post/32601882836/symfony2-testing-interactive-console-command
          * http://symfony.com/doc/current/components/console/introduction.html
          *
@@ -34,59 +41,34 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
         Mockery::close();
     }
 
-    public function testBasic() {
-      $this->commandTester->execute(array('command' => $this->command->getName())); // this will cause phpunit to hang as the command usually requires input
 
+    protected function getInputStream($input)
+    {
+        $stream = fopen('php://memory', 'r+', false);
+        fputs($stream, $input);
+        rewind($stream);
+
+        return $stream;
     }
 
     /*
-    public function testBasicInputToRows() {
-        $inputArray = ['something' => 'value'];
+    public function testCommandFires() {
 
-        $expectedResult = [
-            '0' =>  [
-                'something',
-                'value'
-            ]
-        ];
+        $helper = $this->command->getHelper('question');
+        $inputStream = $this->getInputStream('Test\\n');
 
-        $actualResult = $this->callMethod($this->command, 'inputToRows', [$inputArray]);
+        $helper->setInputStream($inputStream);
 
-        $this->assertEquals($expectedResult, $actualResult);
+        $this->commandTester->execute([
+                'command' => $this->command->getName(),
+                'env'   =>  'testing'
+        ]);
     }
+    */
 
-    public function testAlphabeticallyOrganisedInputToRows() {
-        $inputArray = [
-            'something'         =>  'value',
-            'another.thing'     =>  'another-value',
-        ];
-
-        $expectedResult = [
-            '0' =>  [
-                'another.thing',
-                'another-value'
-            ],
-            '1' =>  [
-                'something',
-                'value'
-            ]
-        ];
-
-        $actualResult = $this->callMethod($this->command, 'inputToRows', [$inputArray]);
-
-        $this->assertEquals($expectedResult, $actualResult);
-    }
-
-    public function testGetKeyFilePath() {
-        $expectedPath = '';
-        $actualPath = $this->command->getKeyFilePath();
-
-        $this->assertEquals($expectedPath, $actualPath);
-    }
 
     public function testFire() {
 
         $this->assertTrue(true);
     }
-    */
 }

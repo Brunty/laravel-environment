@@ -84,4 +84,27 @@ class ArrayHelper {
 
         return $tempArray;
     }
+
+    /**
+     * @param array $inputArray
+     * @return array
+     */
+    public function inputToTableRows($inputArray = [])
+    {
+        $rows = [];
+
+        ksort($inputArray);
+        foreach($inputArray as $envVar => $value) {
+            $rows[] = [$envVar, $value];
+        }
+
+        return $rows;
+    }
+
+    public function mergeDownArrays($envVarsInput, $contents)
+    {
+        $envVarsInput += $contents; // merge two arrays
+
+        return $envVarsInput;
+    }
 }

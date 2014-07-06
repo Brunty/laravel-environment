@@ -50,6 +50,7 @@ class SetupEnvironmentVariablesCommand extends Command {
      *
      * @param  \Illuminate\Filesystem\Filesystem $files
      * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper $array
+     * @param \Brunty\LaravelEnvironment\Helpers\InputHelper $input
      * @internal param \Brunty\LaravelEnvironment\Helpers\InputHelper $input
      * @return \Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand
      */
@@ -81,14 +82,14 @@ class SetupEnvironmentVariablesCommand extends Command {
         $contents = $this->array->arrayKeyToStringPath($contents);
 
         //merging our arrays, we take the input that the user's entered and merge it with the existing contents
-        $this->envVarsInput = $this->mergeDownArrays($this->envVarsInput, $contents);
+        $this->envVarsInput = $this->array->mergeDownArrays($this->envVarsInput, $contents);
 
         // Turn the input that the user has entered (along with the existing content) and convert the string keys back to proper array keys
         $this->envVars = $this->array->stringPathToArrayKey($this->envVarsInput);
 
         // Display a table of the values
         $this->info('Full contents:');
-        $this->envTable(['Key', 'Value'], $this->inputToRows($this->envVarsInput));
+        $this->envTable(['Key', 'Value'], $this->array->inputToTableRows($this->envVarsInput));
         $this->separatorLine();
 
         // confirm and (possibly) write the file!
@@ -124,28 +125,6 @@ class SetupEnvironmentVariablesCommand extends Command {
         return $path;
     }
 
-    /**
-     * @param array $inputArray
-     * @return array
-     */
-    private function inputToRows($inputArray = [])
-    {
-        $rows = [];
-
-        ksort($inputArray);
-        foreach($inputArray as $envVar => $value) {
-            $rows[] = [$envVar, $value];
-        }
-
-        return $rows;
-    }
-
-    private function mergeDownArrays($envVarsInput, $contents)
-    {
-        $envVarsInput += $contents; // merge two arrays
-
-        return $envVarsInput;
-    }
 
     public function createFile($path, $envVars)
     {
@@ -175,13 +154,14 @@ CONTENT;
         $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
 
         while(trim($envVar) != '') {
-            $value = $this->ask('Enter the value of the environment variable: ');
-
+            //$value = $this->ask('Enter the value of the environment variable: ');
+            $value = 'asdasd';
             $this->separatorLine();
 
             $userInput[$envVar] = $value;
 
-            $envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
+            $envVar = '';
+            //$envVar = $this->ask('Enter the name of the environment variable (blank to finish setup): ');
         }
         return $userInput;
     }
