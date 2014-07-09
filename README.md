@@ -8,7 +8,7 @@
 
 This Laravel 4 package gives you a way to setup and work with your environment files within Laravel from the command line.
 
-- `env:setup`
+- `env:configure`
 
 ## Installation
 
@@ -47,9 +47,9 @@ You can see the commands within artisan
 ## Usage
 
 
-- `php artisan env:setup`
+- `php artisan env:configure`
 
-Use the above command to setup an environment file, it works with the optional `--env` flag to specify what environment the file should be for.
+Use the above command to setup and/or configure an environment file, it works with the optional `--env` flag to specify what environment the file should be for.
 
 When using this command, it'll prompt you for the variable name first, then the value.
 

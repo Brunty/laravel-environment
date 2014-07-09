@@ -55,7 +55,7 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
 
         $this->application = new Application();
         $this->application->add(new SetupEnvironmentVariablesCommand(new FileSystemHelper(), new ArrayHelper()));
-        $this->command = $this->application->find('env:setup');
+        $this->command = $this->application->find('env:configure');
         $this->commandTester = new CommandTester($this->command);
         $this->inputInterface = $this->commandTester->getInput();
         $this->outputInterface = $this->commandTester->getOutput();

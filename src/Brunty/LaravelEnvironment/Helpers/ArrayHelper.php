@@ -35,8 +35,7 @@ class ArrayHelper {
         foreach($inputArray as $envVar => $value) {
             $path = explode('.', $envVar);
             $root = &$tempArray;
-            while(count($path) > 1) {
-                $branch = array_shift($path);
+            while($branch = array_shift($path)) {
                 if ( ! isset($root[$branch])) {
                     $root[$branch] = [];
                 }
@@ -44,7 +43,7 @@ class ArrayHelper {
                 $root = &$root[$branch];
             }
 
-            $root[$path[0]] = $value;
+            $root = $value;
         }
 
         return $tempArray;

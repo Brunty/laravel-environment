@@ -19,7 +19,7 @@ class SetupEnvironmentVariablesCommand extends Command {
      *
      * @var string
      */
-    protected $name = 'env:setup';
+    protected $name = 'env:configure';
 
     /**
      * The console command description.
