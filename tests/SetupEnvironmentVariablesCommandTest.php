@@ -47,6 +47,16 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
     protected $root;
 
     /**
+     * @var
+     */
+    protected $fileSystem;
+
+    /**
+     * @var
+     */
+    protected $arrayHelper;
+
+    /**
      * Setup our test - used to register commands with the Symfony command tester.
      */
     public function setUp()
