@@ -87,7 +87,7 @@ class ArrayHelperTest extends TestCase {
             ]
         ];
 
-        $actualResult = $this->arrayHelper->inputToTableRows($inputArray);
+        $actualResult = $this->arrayHelper->arrayToSymfonyConsoleTableRows($inputArray);
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -109,7 +109,7 @@ class ArrayHelperTest extends TestCase {
             ]
         ];
 
-        $actualResult = $this->arrayHelper->inputToTableRows($inputArray);
+        $actualResult = $this->arrayHelper->arrayToSymfonyConsoleTableRows($inputArray);
 
         $this->assertEquals($expectedResult, $actualResult);
     }

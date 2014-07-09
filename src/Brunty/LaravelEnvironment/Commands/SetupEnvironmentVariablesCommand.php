@@ -94,7 +94,7 @@ class SetupEnvironmentVariablesCommand extends Command {
 
         // Display a table of the values
         $this->info('Full contents:');
-        $this->envTable(['Key', 'Value'], $this->array->inputToTableRows($this->envVarsInput));
+        $this->envTable(['Key', 'Value'], $this->array->arrayToSymfonyConsoleTableRows($this->envVarsInput));
         $this->separatorLine();
 
         // confirm and (possibly) write the file!
@@ -203,6 +203,7 @@ CONTENT;
     {
         $this->table($headers, $rows);
     }
+
 
     /**
      * @param $path
