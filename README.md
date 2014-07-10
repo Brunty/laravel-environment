@@ -2,9 +2,8 @@
 
 [![Latest Stable Version](https://poser.pugx.org/brunty/laravel-environment/v/stable.svg)](https://packagist.org/packages/brunty/laravel-environment) [![Build Status](https://travis-ci.org/Brunty/laravel-environment.png?branch=master)](https://travis-ci.org/Brunty/laravel-environment) [![Coverage Status](https://coveralls.io/repos/Brunty/laravel-environment/badge.png?branch=master)](https://coveralls.io/r/Brunty/laravel-environment?branch=master) [![License](https://poser.pugx.org/brunty/laravel-environment/license.svg)](https://packagist.org/packages/brunty/laravel-environment)
 
-# TO DO:
-- Work out how the hell to properly test a command that requires user interaction...
-- Write full tests for the command once the above has been completed
+# Future features
+- Allow for more config types for values - currently only strings are supported, I want to add support for constants, integers, booleans etc.
 
 This Laravel 4 package gives you a way to setup and work with your environment files within Laravel from the command line.
 
