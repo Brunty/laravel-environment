@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://poser.pugx.org/brunty/laravel-environment/v/stable.svg)](https://packagist.org/packages/brunty/laravel-environment) [![Build Status](https://travis-ci.org/Brunty/laravel-environment.png?branch=master)](https://travis-ci.org/Brunty/laravel-environment) [![Coverage Status](https://coveralls.io/repos/Brunty/laravel-environment/badge.png?branch=master)](https://coveralls.io/r/Brunty/laravel-environment?branch=master) [![License](https://poser.pugx.org/brunty/laravel-environment/license.svg)](https://packagist.org/packages/brunty/laravel-environment)
 
-# Future features
+## Future features
 - Allow for more config types for values - currently only strings are supported, I want to add support for constants, integers, booleans etc.
 
 This Laravel 4 package gives you a way to setup and work with your environment files within Laravel from the command line.
@@ -45,7 +45,6 @@ You can see the commands within artisan
 
 ## Usage
 
-
 - `php artisan env:configure`
 
 Use the above command to setup and/or configure an environment file, it works with the optional `--env` flag to specify what environment the file should be for.
@@ -75,4 +74,6 @@ It'll then give you a table showing the values that will be written to the file 
 - If using multi-dimensional arrays, you cannot specify both a value for an item, and have an array in that same item.
 
 
-![Example of it working](http://i.imgur.com/jIEaD1j.jpg)
+### Example of an early version working
+
+![Example of an early version working](http://i.imgur.com/jIEaD1j.jpg)
