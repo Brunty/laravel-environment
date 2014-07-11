@@ -1,10 +1,12 @@
-<?php namespace Brunty\LaravelEnvironment\Helpers;
+<?php
+namespace Brunty\LaravelEnvironment\Helpers;
 
 /**
  * Class ArrayHelper
  * @package Brunty\LaravelEnvironment\Helpers
  */
-class ArrayHelper {
+class ArrayHelper
+{
 
     /**
      * @param $contents
@@ -32,10 +34,10 @@ class ArrayHelper {
     public function stringPathToArrayKey($inputArray = [])
     {
         $tempArray = [];
-        foreach($inputArray as $envVar => $value) {
+        foreach ($inputArray as $envVar => $value) {
             $path = explode('.', $envVar);
             $root = &$tempArray;
-            while($branch = array_shift($path)) {
+            while ($branch = array_shift($path)) {
                 if ( ! isset($root[$branch])) {
                     $root[$branch] = [];
                 }
@@ -56,9 +58,9 @@ class ArrayHelper {
     public function arrayToSymfonyConsoleTableRows($inputArray = [])
     {
         $rows = [];
-
         ksort($inputArray);
-        foreach($inputArray as $envVar => $value) {
+
+        foreach ($inputArray as $envVar => $value) {
             $rows[] = [$envVar, $value];
         }
 

@@ -1,12 +1,9 @@
-<?php namespace Brunty\LaravelEnvironment\Commands;
+<?php
+namespace Brunty\LaravelEnvironment\Commands;
 
 use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
 use Brunty\LaravelEnvironment\Helpers\FileSystemHelper;
-use Brunty\LaravelEnvironment\Helpers\InputHelper;
-use Illuminate\Support\Str as Str;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class SetupEnvironmentVariablesCommand

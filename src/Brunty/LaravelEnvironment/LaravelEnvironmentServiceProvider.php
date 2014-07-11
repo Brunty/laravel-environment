@@ -1,9 +1,9 @@
-<?php namespace Brunty\LaravelEnvironment;
+<?php
+namespace Brunty\LaravelEnvironment;
 
 use Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand;
 use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
 use Brunty\LaravelEnvironment\Helpers\FileSystemHelper;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelEnvironmentServiceProvider extends ServiceProvider {
