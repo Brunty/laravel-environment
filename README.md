@@ -25,21 +25,7 @@ Once this has completed, add the service provider to your service providers arra
 
     'Brunty\LaravelEnvironment\LaravelEnvironmentServiceProvider'
 
-Previously, you may have entered your environment variables like so:
-
-    'key'   =>  $_ENV['ENV_VAR'],
-
-This will cause issues with the package if you don't have an .env file for your environment (this package can create them from blank if required) when using this way of referencing environment variables.
-
-If creation is required, you should reference your environment variables using `getenv('varname')` - alternative you _could_ use:
-
-    'key'   =>  isset($_ENV['ENV_VAR']) ?: null,
-
-Where null is a default value that suits you.
-
-Once that's done you're ready to start using the package
-
-You can see the commands within artisan
+You should then be able to see the command within artisan
 
     php artisan
 
@@ -68,6 +54,16 @@ Would be put into the .env file under:
 To finish setup, just hit enter without giving a name when the command prompts you for a name.
 
 It'll then give you a table showing the values that will be written to the file and prompt you to confirm that you want to write these values.
+
+## Access environment variables
+
+Previously, you _may_ have accessed your environment variables with the `$_ENV` superglobal like so:
+
+    'key'   =>  $_ENV['ENV_VAR'],
+
+This can cause undefined index errors if you don't have a file for your environment already setup (this package can create a file from blank if required) when using this way of accessing environment variables.
+
+I would recommend that you reference your environment variables using `getenv('varname')` which will simply return fales if the environment variable doesn't exist.
 
 ## Notes:
 - Using this command, you can over-write previous values, to do this, just give the same name as the existing value, and it'll over-write the old values as it merges the user input with any existing values.
