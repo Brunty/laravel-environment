@@ -72,6 +72,7 @@ It'll then give you a table showing the values that will be written to the file 
 ## Notes:
 - Using this command, you can over-write previous values, to do this, just give the same name as the existing value, and it'll over-write the old values as it merges the user input with any existing values.
 - If using multi-dimensional arrays, you cannot specify both a value for an item, and have an array in that same item.
+- This command assumes you're running it under a user who has permission to write files if needed (as well as create the file if it doesn't already exist)
 
 
 ### Example of an early version working
