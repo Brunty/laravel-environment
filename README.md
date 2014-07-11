@@ -63,7 +63,11 @@ Previously, you _may_ have accessed your environment variables with the `$_ENV` 
 
 This can cause undefined index errors if you don't have a file for your environment already setup (this package can create a file from blank if required) when using this way of accessing environment variables.
 
-I would recommend that you reference your environment variables using `getenv('varname')` which will simply return fales if the environment variable doesn't exist.
+I would recommend that you reference your environment variables using:
+
+    'key'   =>  getenv('varname'),
+
+Which will simply return false if the environment variable doesn't exist (any 'multi-dimensional' items can be access with dot notation in the same way you entered them)
 
 ## Notes:
 - Using this command, you can over-write previous values, to do this, just give the same name as the existing value, and it'll over-write the old values as it merges the user input with any existing values.
