@@ -1,8 +1,5 @@
 <?php
 
-use Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand;
-use Brunty\LaravelEnvironment\Helpers\ArrayHelper;
-use Brunty\LaravelEnvironment\Helpers\FileSystemHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -63,16 +60,8 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
     {
         parent::setUp();
 
-        $this->application = new Application();
-        $this->application->add(new SetupEnvironmentVariablesCommand(new FileSystemHelper(), new ArrayHelper()));
-        $this->command = $this->application->find('env:configure');
-        $this->commandTester = new CommandTester($this->command);
-        $this->inputInterface = $this->commandTester->getInput();
-        $this->outputInterface = $this->commandTester->getOutput();
-
-        $this->fileSystem = Mockery::mock('Brunty\LaravelEnvironment\Helpers\FileSystemHelper[copy, exists, put, includeFile]');
-
-        $this->arrayHelper = Mockery::mock('Brunty\LaravelEnvironment\Helpers\ArrayHelper[arrayKeyToStringPath, stringPathToArrayKey, mergeDownArrays]');
+        $this->fileSystem = Mockery::mock('Brunty\\LaravelEnvironment\\Helpers\\FileSystemHelper[copy, exists, put, includeFile]');
+        $this->arrayHelper = Mockery::mock('Brunty\\LaravelEnvironment\\Helpers\\ArrayHelper[arrayKeyToStringPath, stringPathToArrayKey, mergeDownArrays]');
 
 
     }
@@ -106,7 +95,7 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
         $nameMessage = '';
         $valueMessage = '';
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('ask')
             ->times(1)
@@ -114,7 +103,7 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
 
         $command->askInitialName($nameMessage);
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('ask')
             ->times(1)
@@ -122,7 +111,7 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
 
         $command->askValue($valueMessage);
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('ask')
             ->times(1)
@@ -137,7 +126,7 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
      */
     public function testGetUserInput() {
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[askInitialName, askValue, separatorLine, askRepeatName]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[askInitialName, askValue, separatorLine, askRepeatName]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('askInitialName')
             ->once()
@@ -189,7 +178,7 @@ CONTENT;
             ->once()
             ->andReturn($expectedFileContent);
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[getKeyFilePath, option]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[getKeyFilePath, option]", [$this->fileSystem, $this->arrayHelper]);
 
         $actualFileContent = $command->createFile('.env.php', $envVars);
 
@@ -202,7 +191,7 @@ CONTENT;
      */
     public function testConfirmWriteConfirmed() {
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[confirm, createFile, info]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[confirm, createFile, info]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('confirm')
             ->once()
@@ -225,7 +214,7 @@ CONTENT;
      */
     public function testConfirmWriteNotConfirmed() {
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[confirm, error]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[confirm, error]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('confirm')
             ->once()
@@ -244,7 +233,7 @@ CONTENT;
      */
     public function testSeparatorLine() {
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[info]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[info]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('info')
             ->once()
@@ -275,7 +264,7 @@ CONTENT;
             ->with('.env.php')
             ->andReturn($envArray);
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[getKeyFilePath, option]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[getKeyFilePath, option]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('getKeyFilePath')
             ->once()
@@ -294,7 +283,7 @@ CONTENT;
      */
     public function testEnvTable() {
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[table]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[table]", [$this->fileSystem, $this->arrayHelper]);
 
         $headers = [];
         $rows = [];
@@ -314,7 +303,7 @@ CONTENT;
      *
      */
     public function testGetGenerationMessage() {
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[]", [$this->fileSystem, $this->arrayHelper]);
 
         $message = $command->getGenerationMessage();
 
@@ -326,7 +315,7 @@ CONTENT;
      *
      */
     public function testGetKeyFilePath() {
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[option]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[option]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('option')
             ->once()
@@ -343,7 +332,7 @@ CONTENT;
      *
      */
     public function testEnvironmentSetGetKeyFilePath() {
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[option]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[option]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive('option')
             ->twice()
@@ -384,7 +373,7 @@ CONTENT;
                 'foo'   =>  'bar'
             ]);
 
-        $command = Mockery::mock("Brunty\LaravelEnvironment\Commands\SetupEnvironmentVariablesCommand[getUserInput, separatorLine, getKeyFileArray, getKeyFilePath, info, envTable, confirmWrite, getOption]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[getUserInput, separatorLine, getKeyFileArray, getKeyFilePath, info, envTable, confirmWrite, getOption]", [$this->fileSystem, $this->arrayHelper]);
 
         $command->shouldReceive("getUserInput")
             ->once()
