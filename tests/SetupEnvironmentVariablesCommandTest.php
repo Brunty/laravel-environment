@@ -94,14 +94,15 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
     public function testUserAsks() {
         $nameMessage = '';
         $valueMessage = '';
+        $contents = [];
 
-        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[askWithCompletion]", [$this->fileSystem, $this->arrayHelper]);
 
-        $command->shouldReceive('ask')
+        $command->shouldReceive('askWithCompletion')
             ->times(1)
             ->andReturn('foo');
 
-        $command->askInitialName($nameMessage);
+        $command->askInitialName($nameMessage, $contents);
 
         $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
 
@@ -111,13 +112,13 @@ class SetupEnvironmentVariablesCommandTest extends TestCase {
 
         $command->askValue($valueMessage);
 
-        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[ask]", [$this->fileSystem, $this->arrayHelper]);
+        $command = Mockery::mock("Brunty\\LaravelEnvironment\\Commands\\SetupEnvironmentVariablesCommand[askWithCompletion]", [$this->fileSystem, $this->arrayHelper]);
 
-        $command->shouldReceive('ask')
+        $command->shouldReceive('askWithCompletion')
             ->times(1)
             ->andReturn('');
 
-        $command->askRepeatName($nameMessage);
+        $command->askRepeatName($nameMessage, $contents);
 
     }
 

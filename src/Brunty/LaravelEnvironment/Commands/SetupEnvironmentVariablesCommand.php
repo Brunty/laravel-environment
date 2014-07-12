@@ -26,22 +26,16 @@ class SetupEnvironmentVariablesCommand extends Command
      */
     protected $description = "Setup the environment file(s) for a Laravel application.";
 
-    /*
+    /**
      * This array is used to hold the input as entered by the user
      *
      * @var array
      */
-    /**
-     * @var array
-     */
     protected $envVarsInput = [];
 
-    /*
+    /**
      * This array holds the actual values stored in array format as they'll be stored in the environment file
      *
-     * @var array
-     */
-    /**
      * @var array
      */
     protected $envVars = [];
@@ -71,19 +65,21 @@ class SetupEnvironmentVariablesCommand extends Command
     }
 
     /**
-     * Execute the console command.
+     * Execute the console command. Does a fair few function calls itself.
+     *
      * @return void
      */
     public function fire()
     {
-        $this->envVarsInput = $this->getUserInput();
-        $this->separatorLine();
-
         // get our existing content
         $contents = $this->getKeyFileArray();
 
         // turn the existing contents into an array with their keys as strings (to match the format of user input)
         $contents = $this->array->arrayKeyToStringPath($contents);
+
+        // get the input from the user
+        $this->envVarsInput = $this->getUserInput($contents);
+        $this->separatorLine();
 
         //merging our arrays, we take the input that the user's entered and merge it with the existing contents
         $this->envVarsInput = $this->array->mergeDownArrays($this->envVarsInput, $contents);
@@ -124,18 +120,18 @@ class SetupEnvironmentVariablesCommand extends Command
      */
     public function getKeyFilePath()
     {
-
         $env = $this->option('env') ? '.' . $this->option('env') : '';
         $path = base_path()."/.env{$env}.php";
         return $path;
     }
 
+
     /**
      * @param $path
-     * @param $envVars
+     * @param array $envVars
      * @return int
      */
-    public function createFile($path, $envVars)
+    public function createFile($path, $envVars = [])
     {
         // TODO: refactor this ?
         $varContent = var_export($envVars, true);
@@ -163,21 +159,25 @@ CONTENT;
     /**
      * @return array
      */
-    public function getUserInput()
+    public function getUserInput($contents = [])
     {
-
         $userInput = [];
-        $envVar = $this->askInitialName('Enter the name of the environment variable (blank to finish setup): ');
+
+        $variableNameMessage = 'Enter the name of the environment variable (blank to finish setup): ';
+        $variableValueMessage = 'Enter the value of the environment variable: ';
+
+        $envVar = $this->askInitialName($variableNameMessage, $contents);
 
         while(trim($envVar) != '') {
-            $value = $this->askValue('Enter the value of the environment variable: ');
+            $value = $this->askValue($variableValueMessage);
 
             $this->separatorLine();
 
             $userInput[$envVar] = $value;
 
-            $envVar = $this->askRepeatName('Enter the name of the environment variable (blank to finish setup): ');
+            $envVar = $this->askRepeatName($variableNameMessage, $contents);
         }
+
         return $userInput;
     }
 
@@ -185,18 +185,18 @@ CONTENT;
      * @param $message
      * @return string
      */
-    public function askInitialName($message)
+    public function askInitialName($message, $contents = [])
     {
-        return $this->ask($message);
+        return $this->askWithCompletion($message, array_keys($contents));
     }
 
     /**
      * @param $message
      * @return string
      */
-    public function askRepeatName($message)
+    public function askRepeatName($message, $contents)
     {
-        return $this->ask($message);
+        return $this->askWithCompletion($message, array_keys($contents));
     }
 
 
