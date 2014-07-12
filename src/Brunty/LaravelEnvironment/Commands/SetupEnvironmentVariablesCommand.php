@@ -157,6 +157,7 @@ CONTENT;
     }
 
     /**
+     * @param array $contents
      * @return array
      */
     public function getUserInput($contents = [])
@@ -183,6 +184,7 @@ CONTENT;
 
     /**
      * @param $message
+     * @param array $contents
      * @return string
      */
     public function askInitialName($message, $contents = [])
@@ -192,6 +194,7 @@ CONTENT;
 
     /**
      * @param $message
+     * @param $contents
      * @return string
      */
     public function askRepeatName($message, $contents)
