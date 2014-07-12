@@ -51,6 +51,8 @@ Would be put into the .env file under:
         ]
     ]
 
+The names you enter for your env variables will autocomplete with existing values you have in the file.
+
 To finish setup, just hit enter without giving a name when the command prompts you for a name.
 
 It'll then give you a table showing the values that will be written to the file and prompt you to confirm that you want to write these values.
