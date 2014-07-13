@@ -7,21 +7,40 @@ namespace Brunty\LaravelEnvironment\Helpers;
  */
 class ArrayHelper
 {
+    /**
+     *
+     */
+    const SEPARATOR = '.';
 
     /**
-     * @param $contents
+     * Converts a multi-dimensional array to dot-notation single dimensional strings
+     * Convert:
+     *  [
+     *      'foo'   =>  [
+     *          'bar'   =>  'baz
+     *      ],
+     *      'baa'   =>  'sheep'
+     *  ]
+     *
+     * TO
+     *  [
+     *      'foo.bar'   =>  'baz',
+     *      'baa'       =>  'sheep'
+     *  ]
+     *
+     * @param $arrayContents
      * @return array
      */
-    public function arrayKeyToStringPath($contents)
+    public function arrayKeyToStringPath($arrayContents)
     {
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($contents));
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arrayContents));
         $result = [];
         foreach ($iterator as $leafValue) {
             $keys = [];
             foreach (range(0, $iterator->getDepth()) as $depth) {
                 $keys[] = $iterator->getSubIterator($depth)->key();
             }
-            $result[ join('.', $keys) ] = $leafValue;
+            $result[ join(self::SEPARATOR, $keys) ] = $leafValue;
         }
         return $result;
     }

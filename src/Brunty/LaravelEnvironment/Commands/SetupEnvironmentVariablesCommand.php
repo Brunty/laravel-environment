@@ -24,7 +24,7 @@ class SetupEnvironmentVariablesCommand extends Command
      *
      * @var string
      */
-    protected $description = "Setup the environment file(s) for a Laravel application.";
+    protected $description = "Setup and configure environment file(s) for a Laravel application.";
 
     /**
      * This array is used to hold the input as entered by the user
@@ -51,7 +51,7 @@ class SetupEnvironmentVariablesCommand extends Command
     protected $array;
 
     /**
-     * Create a new key generator command.
+     * Create a environment variables command
      *
      * @param \Brunty\LaravelEnvironment\Helpers\FileSystemHelper $files
      * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper $array
