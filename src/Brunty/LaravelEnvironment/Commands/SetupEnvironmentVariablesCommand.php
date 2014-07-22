@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 
 /**
  * Class SetupEnvironmentVariablesCommand
+ *
  * @package Brunty\LaravelEnvironment\Commands
  */
 class SetupEnvironmentVariablesCommand extends Command
@@ -54,7 +55,7 @@ class SetupEnvironmentVariablesCommand extends Command
      * Create a environment variables command
      *
      * @param \Brunty\LaravelEnvironment\Helpers\FileSystemHelper $files
-     * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper $array
+     * @param \Brunty\LaravelEnvironment\Helpers\ArrayHelper      $array
      */
     public function __construct(FileSystemHelper $files, ArrayHelper $array)
     {
@@ -103,10 +104,10 @@ class SetupEnvironmentVariablesCommand extends Command
      */
     public function getKeyFileArray()
     {
-        $path = $this->getKeyFilePath();
-        $defaultEnvFile = dirname(__FILE__)."/../Files/.env.default.php";
+        $path           = $this->getKeyFilePath();
+        $defaultEnvFile = dirname(__FILE__) . "/../Files/.env.default.php";
 
-        if( ! $this->files->exists($path)) {
+        if (!$this->files->exists($path)) {
             $this->files->copy($defaultEnvFile, $path); // copy default file
         }
 
@@ -120,22 +121,23 @@ class SetupEnvironmentVariablesCommand extends Command
      */
     public function getKeyFilePath()
     {
-        $env = $this->option('env') ? '.' . $this->option('env') : '';
-        $path = base_path()."/.env{$env}.php";
+        $env  = $this->option('env') ? '.' . $this->option('env') : '';
+        $path = base_path() . "/.env{$env}.php";
+
         return $path;
     }
 
-
     /**
-     * @param $path
+     * @param       $path
      * @param array $envVars
+     *
      * @return int
      */
     public function createFile($path, $envVars = [])
     {
         // TODO: refactor this ?
-        $varContent = var_export($envVars, true);
-        $message = $this->getGenerationMessage();
+        $varContent  = var_export($envVars, true);
+        $message     = $this->getGenerationMessage();
         $fileContent = <<<CONTENT
 <?php
 
@@ -144,6 +146,7 @@ class SetupEnvironmentVariablesCommand extends Command
 return {$varContent};
 
 CONTENT;
+
         return $this->files->put($path, $fileContent);
     }
 
@@ -158,18 +161,19 @@ CONTENT;
 
     /**
      * @param array $contents
+     *
      * @return array
      */
     public function getUserInput($contents = [])
     {
         $userInput = [];
 
-        $variableNameMessage = 'Enter the name of the environment variable (blank to finish setup): ';
+        $variableNameMessage  = 'Enter the name of the environment variable (blank to finish setup): ';
         $variableValueMessage = 'Enter the value of the environment variable: ';
 
         $envVar = $this->askInitialName($variableNameMessage, $contents);
 
-        while(trim($envVar) != '') {
+        while (trim($envVar) != '') {
             $value = $this->askValue($variableValueMessage);
 
             $this->separatorLine();
@@ -183,8 +187,9 @@ CONTENT;
     }
 
     /**
-     * @param $message
+     * @param       $message
      * @param array $contents
+     *
      * @return string
      */
     public function askInitialName($message, $contents = [])
@@ -195,6 +200,7 @@ CONTENT;
     /**
      * @param $message
      * @param $contents
+     *
      * @return string
      */
     public function askRepeatName($message, $contents)
@@ -202,14 +208,27 @@ CONTENT;
         return $this->askWithCompletion($message, array_keys($contents));
     }
 
-
     /**
      * @param $message
+     *
      * @return string
      */
     public function askValue($message)
     {
-        return $this->ask($message);
+        $value = $this->ask($message);
+        $value = $this->convert($value);
+
+        return $value;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function convert($value)
+    {
+        return $value;
     }
 
     /**
@@ -221,20 +240,16 @@ CONTENT;
         $this->table($headers, $rows);
     }
 
-
     /**
      * @param $path
      * @param $vars
      */
     public function confirmWrite($path, $vars)
     {
-        if ($this->confirm('Are you sure you want to write these values? [yes|no]', false))
-        {
+        if ($this->confirm('Are you sure you want to write these values? [yes|no]', false)) {
             $this->createFile($path, $vars);
             $this->info("Application environment variables set.");
-        }
-        else
-        {
+        } else {
             $this->error('Ending command, environment file not setup.');
         }
     }
