@@ -1,5 +1,7 @@
 # Setup and work with .env files in Laravel from the command line
 
+## NOTE: This doesn't work with Laravel 5 since .env files were changed. This is for Laravel 4.X
+
 [![Latest Stable Version](https://poser.pugx.org/brunty/laravel-environment/v/stable.svg)](https://packagist.org/packages/brunty/laravel-environment) [![Build Status](https://travis-ci.org/Brunty/laravel-environment.png?branch=master)](https://travis-ci.org/Brunty/laravel-environment) [![Coverage Status](https://coveralls.io/repos/Brunty/laravel-environment/badge.png?branch=master)](https://coveralls.io/r/Brunty/laravel-environment?branch=master) [![License](https://poser.pugx.org/brunty/laravel-environment/license.svg)](https://packagist.org/packages/brunty/laravel-environment)
 
 ## Future features
